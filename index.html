@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FullStackComputer</title>
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/all.min.css">
+</head>
+
+<body>
+    <!--Banner Image-->
+    <div class="banner-wrapper">
+        <picture>
+            <source
+                srcset="https://lh3.googleusercontent.com/ltSGFP7JMrhI6fAsjNFHEbaQsTQuYlrUNjXV_zEZWY4yA7DHd6J81MkcD5cUwO4HiwA85NDC9OyihRPx5YE5OBJLe2y2x-HyPg=w1920-rw"
+                type="image/webp">
+            <source
+                srcset="https://lh3.googleusercontent.com/ltSGFP7JMrhI6fAsjNFHEbaQsTQuYlrUNjXV_zEZWY4yA7DHd6J81MkcD5cUwO4HiwA85NDC9OyihRPx5YE5OBJLe2y2x-HyPg=w1920"
+                type="image/png">
+            <img class="banner-img" alt="banner-tet"
+                src="https://lh3.googleusercontent.com/ltSGFP7JMrhI6fAsjNFHEbaQsTQuYlrUNjXV_zEZWY4yA7DHd6J81MkcD5cUwO4HiwA85NDC9OyihRPx5YE5OBJLe2y2x-HyPg=w1920-rw">
+        </picture>
+    </div>
+
+    <nav class="navbar">
+        <div class="logo"><a href="">FullStack<span>Computer</span></a></div>
+        <div class="search-box">
+            <input type="text" placeholder="Tìm sản phẩm...">
+            <button><i class="fa-solid fa-magnifying-glass"></i></button>
+        </div>
+        <div class="cart-icon">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span class="badge">0</span>
+            <i class="fa-solid fa-user"></i>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <div class="brand-container">
+            <h4>Laptop <span>(34 SẢN PHẨM)</span></h4>
+            <button class="brand-item"><img
+                    src="https://static.vecteezy.com/system/resources/previews/019/136/409/non_2x/acer-logo-acer-icon-free-free-vector.jpg"
+                    alt="Acer"></button>
+            <button class="brand-item"><img
+                    src="https://inkythuatso.com/uploads/images/2021/11/logo-asus-inkythuatso-2-01-26-09-12-02.jpg"
+                    alt="Asus"></button>
+            <button class="brand-item"><img
+                    src="https://icon-icons.com/download-file?file=https%3A%2F%2Fimages.icon-icons.com%2F2845%2FPNG%2F512%2Fhp_logo_icon_181291.png&id=181291&pack_or_individual=pack"
+                    alt="HP"></button>
+            <button class="brand-item"><img src="https://download.logo.wine/logo/Apple_Inc./Apple_Inc.-Logo.wine.png"
+                    alt="Apple"></button>
+            <button class="brand-item"><img src="https://img.icons8.com/win10/1200/dell.jpg" alt="Dell"></button>
+            <button class="brand-item"><img
+                    src="https://icon-icons.com/download-file?file=https%3A%2F%2Fimages.icon-icons.com%2F2389%2FPNG%2F512%2Flenovo_logo_icon_145112.png&id=145112&pack_or_individual=pack"
+                    alt="Lenovo"></button>
+            <button class="brand-item"><img src="https://upload.wikimedia.org/wikipedia/commons/1/13/Msi-Logo.jpg"
+                    alt="MSI"></button>
+            <h4>Chọn mua laptop theo nhu cầu</h4>
+
+            <button class="brand-item"><img
+                    src="https://file.hstatic.net/200000722513/article/dsc2492-1_faf209e3cfbf44439ffaae6afa1060dc_master.jpg"
+                    alt="Sinh Viên">Sinh viên</button>
+            <button class="brand-item"><img src="https://cdn.tgdd.vn/Files/2021/03/04/1332362/1_800x450.jpg"
+                    alt="Gaming">Laptop Gaming</button>
+            <button class="brand-item"><img
+                    src="https://cdn-media.sforum.vn/storage/app/media/nguyenhang/ultrabook-la-gi/ultrabook-la-gi-7.jpg"
+                    alt="Ultrabook">Ultrabook</button>
+            <button class="brand-item"><img src="https://cdn.tgdd.vn/Files/2021/03/04/1332362/1_800x450.jpg"
+                    alt="2-in-1"> 2-in-1</button>
+
+        </div>
+
+        <div class="container-pr">
+            <h2> Sản Phẩm Bán Chạy</h2>
+            <div class="pr-trend">
+
+                <div id="trendingProducts" class="trending-products">
+                    <div id="productGrid1" class="product-grid"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-header">
+            <h2><i class="fa-solid fa-microchip"></i> Danh Sách Linh Kiện</h2>
+            <div class="filters">
+                <button class="active">Tất cả</button>
+                <button>CPU</button>
+                <button>RAM</button>
+            </div>
+        </div>
+
+        <div id="productGrid" class="product-grid"></div>
+
+        <div class="container-pr">
+            <h2> Sản Phẩm Bán Chạy</h2>
+            <div class="pr-trend">
+
+                <div id="trendingProducts" class="trending-products">
+                    <div id="productGrid2" class="product-grid"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-header">
+            <h2><i class="fa-solid fa-laptop"></i> Danh Sách Laptop</h2>
+            <div class="filters">
+                <!-- <button class="active">Tất cả</button>
+                <button>CPU</button>
+                <button>RAM</button> -->
+            </div>
+
+        </div>
+        <div id="productGrid3" class="product-grid3"></div>
+    </div>
+
+    <div class="btn-contact">
+        <!-- Zalo Chat -->
+        <a href="https://zalo.me/0379912605" target="_blank">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" alt="Gọi Zalo" width="50"
+                height="50">
+        </a>
+        <!-- Facebook Messenger Chat -->
+        <a href="https://m.me/luanduiga1302?locale=vi_VN" target="_blank">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"
+                alt="Gọi Facebook" width="50" height="50">
+        </a>
+    </div>
+
+    <script src="./assets/js/controllers/productController.js"></script>
+</body>
+
+</html>
