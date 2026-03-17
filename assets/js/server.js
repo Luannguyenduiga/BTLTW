@@ -3,7 +3,7 @@ import cors from '@fastify/cors';
 import fastifyStatic from '@fastify/static';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import {connectDB, sql} from './configDB.js';
+import { connectDB, sql } from './configDB.js';
 
 const fastify = Fastify({ logger: true });
 await fastify.register(cors, { origin: true });
@@ -21,18 +21,6 @@ fastify.register(fastifyStatic, {
   prefix: '/images/', // URL sẽ bắt đầu bằng /images/ để truy cập vào thư mục này
 });
 
-
-// route lấy hình ảnh
-fastify.get('/hinhanh', async (req, reply) => {
-  try {
-    const pool = await connectDB(); // Đảm bảo đã kết nối trước khi truy vấn
-    const result = await pool.request().query('SELECT * FROM HINHANH_SP');
-    reply.send(result.recordset); // Gửi dữ liệu trả về cho client
-  } catch (err) {
-    reply.status(500).send(err);
-  }
-});
-
 // route tên và giá lấy sản phẩm
 fastify.get('/products', async (req, reply) => {
   try {
@@ -40,17 +28,21 @@ fastify.get('/products', async (req, reply) => {
       SELECT 
         p.name,
         p.price,
-        h.image_url
+        p.product_id,
+        p.category_id,
+        CONCAT('/images/',h.image_url) AS image_url
       FROM SANPHAM p
-      JOIN HINHANH_SP h 
+      LEFT JOIN HINHANH_SP h 
         ON p.product_id = h.product_id
-      WHERE h.is_main = 1
+        AND h.is_main = 1
+      WHERE p.status = 'active' 
     `;
     reply.send(result.recordset);
   } catch (err) {
     reply.code(500).send(err);
   }
 });
+
 
 fastify.get('/', async (req, reply) => {
   return { status: 'OK', message: 'Fullstack Computer API running' };
