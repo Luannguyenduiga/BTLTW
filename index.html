@@ -7,6 +7,7 @@
     <title>FullStackComputer</title>
     <link rel="stylesheet" href="./assets/css/grid.css">
     <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/nav.css">
     <link rel="stylesheet" href="./assets/css/all.min.css">
 </head>
 
@@ -25,19 +26,64 @@
         </picture>
     </div>
 
-    <nav class="navbar">
-        <div class="logo"><a href="">FullStack<span>Computer</span></a></div>
-        <div class="search-box">
-            <input type="text" placeholder="Tìm sản phẩm...">
-            <button onclick=""><i class="fa-solid fa-magnifying-glass"></i></button>
+    <div class="container1">
+        <div class="nav">
+            <ul>
+                <li><a href="#"><i class="fa-regular fa-building"></i> Hệ thống showroom</a></li>
+                <li><a href="#"><i class="fa-solid fa-briefcase"></i> Dành cho doanh nghiệp</a></li>
+                <li><a href="#"><i class="fa-solid fa-graduation-cap"></i> Apple education</a></li>
+                <li><a href="#"><i class="fa-solid fa-phone"></i> Hotline</a></li>
+                <li><a href="#"><i class="fa-solid fa-rss"></i> tin công nghệ</a></li>
+                <li><a href="#"><i class="fa-solid fa-desktop"></i> xây dựng cấu hình</a></li>
+                <li><a href="#"><i class="fa-solid fa-gift"></i> khuyến mãi</a></li>
+            </ul>
         </div>
-        <div class="cart-icon">
-            <i class="fa-solid fa-cart-shopping"></i>
-            <span class="badge">5</span>
-            <i class="fa-solid fa-user"></i>
-        </div>
-    </nav>
+    </div>
+    <div class="header-nav">
+        <div class="row align-center">
+            <div class="col-3 ?">
+                <button class="btn-category"><i class="fa-solid fa-bars"></i> Danh mục sản phẩm</button>
+            </div>
 
+            <div class="search-container">
+                <input type="text" placeholder="Bạn muốn mua gì hôm nay...">
+                <div class="search-keywords">
+                    <a href="#">IPhone 17</a>
+                    <a href="#">MacBook Air M4</a>
+                    <a href="#">Laptop</a>
+                    <a href="#">Laptop RTX 50 series</a>
+                    <a href="#">Màn Hình</a>
+                    <a href="#">VGA</a>
+                    <a href="#">Build PC</a>
+                </div>
+            </div>
+
+            <div class="col-3 flex-end">
+                <div class="user-info-header">
+                    <img class="avt-header"
+                        src="https://scontent.fsgn5-10.fna.fbcdn.net/v/t39.30808-1/513826810_1412559273230131_6427666480297972674_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=106&ccb=1-7&_nc_sid=e99d92&_nc_eui2=AeHGN7ybpgLnQyg-KPinyHu7qUxuDsymr06pTG4OzKavTmNbt3JbOe6IwJ3LvHdRTlQGQQIVwnKa5AKw2ajPUiOG&_nc_ohc=sgXqvYjlzQYQ7kNvwFGlxEy&_nc_oc=AdmLIS6O355erxwZ9brCPqbO8drzh6FIreG1UcnBJGb_i_0XS_mixgCnZLfbPyDWDGU&_nc_zt=24&_nc_ht=scontent.fsgn5-10.fna&_nc_gid=p8YYj-xdohxl06HocD_B6Q&_nc_ss=8&oh=00_Afzm1NtQpnyk2YLm87eYMommV_N7ZR_NPWA-YLiRuLE-xQ&oe=69B8B936"
+                        alt="">
+                    <div class="avatar"></div>
+                    <div class="user-text">
+                        <p class="small-text">Xin chào, </p>
+                        <span class="small-text">Luân Nguyễn</span>
+                    </div>
+                    <a href="#" class="cart-wrapper">
+                        <div class="cart-icon-container">
+                            <i class="fa-solid fa-bell icon-header"></i>
+                            <span class="cart-badge">0</span>
+                        </div>
+                    </a>
+                    <a href="#" class="cart-wrapper">
+                        <div class="cart-icon-container">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                            <span class="cart-badge">0</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <div class="container">
@@ -53,7 +99,7 @@
                         <div class="slide"><img src="./assets/images/banner/banner6.jpg" alt="Banner 6"></div>
                     </div>
 
-                    <button class="prev" onclick="moveSlide(-1)">&#10094;</button> <!-- Nút bấm slides-->
+                    <button class="prev" onclick="moveSlide(-1)">&#10094;</button>
                     <button class="next" onclick="moveSlide(1)">&#10095;</button>
 
                     <div class="dots">
@@ -66,6 +112,79 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-3">
+                <div class="filter-sidebar">
+                    <div class="filter-group">
+                        <h3 class="filter-title">Khoảng giá</h3>
+                        <div class="price-input-group">
+                            <div class="input-wrapper">
+                                <input type="text" id="min-price-input" class="price-field" value="0">
+                                <span class="currency-label">vnd</span>
+                            </div>
+
+                            <span>—</span>
+
+                            <div class="input-wrapper">
+                                <input type="text" id="max-price-input" class="price-field" value="100.000.000">
+                                <span class="currency-label">vnd</span>
+                            </div>
+                        </div>
+
+                        <div class="range-slider-container">
+                            <div class="slider-track"></div>
+                            <input type="range" id="range-min" class="range-input" min="0" max="100000000" value="0"
+                                step="10000">
+                            <input type="range" id="range-max" class="range-input" min="0" max="100000000"
+                                value="100000000" step="10000">
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <div class="filter-header">
+                            <h3 class="filter-title">Thương hiệu</h3>
+                        </div>
+                        <div class="filter-options grid-2-col" id="brand-filter-group">
+                            <label><input type="checkbox"> Acer</label>
+                            <label><input type="checkbox"> Apple</label>
+                            <label><input type="checkbox"> Asus</label>
+                            <label><input type="checkbox"> Dell</label>
+                        </div>
+                        <a href="#" class="view-more">Xem thêm</a>
+                    </div>
+
+                    <div class="filter-group">
+                        <div class="filter-header">
+                            <h3 class="filter-title">Series model</h3>
+                        </div>
+                        <div class="filter-options">
+                            <label><input type="checkbox"> ASUS ExpertBook</label>
+                            <label><input type="checkbox"> ASUS ROG Gaming</label>
+                            <label><input type="checkbox"> ASUS TUF Gaming</label>
+                            <label><input type="checkbox"> ASUS Vivobook</label>
+                        </div>
+                        <a href="#" class="view-more">Xem thêm</a>
+                    </div>
+
+                    <div class="filter-group">
+                        <div class="filter-header">
+                            <h3 class="filter-title">Nhu cầu</h3>
+                        </div>
+                        <div class="filter-options">
+                            <label><input type="checkbox"> Doanh nghiệp</label>
+                            <label><input type="checkbox"> Doanh nhân</label>
+                            <label><input type="checkbox"> Gaming</label>
+                            <label><input type="checkbox"> Học sinh - Sinh viên</label>
+                        </div>
+                        <a href="#" class="view-more">Xem thêm</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-9"></div>
         </div>
     </div>
 
@@ -106,7 +225,7 @@
         </div>
 
         <div class="container-pr">
-            <h2>  Top 3 Sản Phẩm Bán Chạy</h2>
+            <h2> Top 3 Sản Phẩm Bán Chạy</h2>
             <div class="pr-trend">
 
                 <div id="trendingProducts" class="trending-products">
@@ -127,7 +246,7 @@
         <div id="productGrid" class="product-grid"></div>
 
         <div class="container-pr">
-            <h2>  Top 3 Sản Phẩm Bán Chạy</h2>
+            <h2> Top 3 Sản Phẩm Bán Chạy</h2>
             <div class="pr-trend">
 
                 <div id="trendingProducts" class="trending-products">
@@ -135,7 +254,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="container">
             <div class="row">
                 <div class="col-12">
@@ -206,7 +325,7 @@
         <div id="productGrid5" class="product-grid3"></div>
     </div>
 
-    
+
 
     <div class="btn-contact">
         <!-- Zalo Chat -->
