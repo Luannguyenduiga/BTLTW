@@ -71,6 +71,10 @@ a {
     margin-top: 6px;
 }
 
+.search-keywords a:hover {
+    color: #3348bb;
+}
+
 .header-nav {
     margin-top: 30px;
     width: 1920px;
@@ -167,12 +171,18 @@ a {
     padding: 15px;
     border-radius: 8px;
     border: 1px solid #eee;
+    width: 100%;
 }
 
 .filter-group {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     border-bottom: 1px solid #f0f0f0;
     padding-bottom: 15px;
+    width: 100%;
+}
+
+#list-filter {
+    width: 15%;
 }
 
 .filter-header {
