@@ -1,0 +1,23 @@
+{
+  "name": "fullstack-computer-btw",
+  "version": "1.0.0",
+  "main": "assets/js/server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node assets/js/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@fastify/cors": "^11.2.0",
+    "@fastify/multipart": "^9.4.0",
+    "@fastify/static": "^9.0.0",
+    "dotenv": "^17.3.1",
+    "fastify": "^5.7.4",
+    "fastify-multipart": "^5.3.1",
+    "mssql": "^12.2.0",
+    "pump": "^3.0.4"
+  }
+}

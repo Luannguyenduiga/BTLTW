@@ -1,0 +1,159 @@
+
+
+/* .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+} */
+
+.footer {
+    background-color: #fff;
+    padding-top: 30px;
+    width: 100%;
+}
+
+.footer-top {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.footer-col {
+    flex: 1;
+    min-width: 180px;
+}
+
+.footer-col h4 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+.footer-col ul {
+    list-style: none;
+}
+
+.footer-col ul li {
+    margin-bottom: 8px;
+}
+
+.footer-col ul li a {
+    text-decoration: none;
+    color: #666;
+    font-size: 13px;
+}
+
+.footer-col ul li a:hover {
+    color: #0056b3;
+}
+
+.phone-number {
+    color: #0056b3;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.social-list p {
+    font-size: 13px;
+    margin-bottom: 8px;
+    cursor: pointer;
+}
+
+.social-list i {
+    width: 20px;
+    margin-right: 5px;
+    text-align: center;
+}
+
+.blue-link {
+    color: #0056b3;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.divider {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 20px 0;
+}
+
+.footer-payment {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.payment-icons {
+    display: flex;
+    gap: 15px;
+}
+
+.pay-item {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 8px;
+    text-align: center;
+    width: 75px;
+}
+
+.pay-item i {
+    display: block;
+    font-size: 20px;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.pay-item span {
+    font-size: 10px;
+    display: block;
+}
+
+.footer-bottom {
+    background-color: #f8f9fa;
+    padding: 30px 0;
+    font-size: 12px;
+    color: #666;
+    border-top: 1px solid #eee;
+}
+
+.bottom-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1.5fr 1fr;
+    gap: 30px;
+}
+
+.certification img {
+    margin-bottom: 10px;
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .bottom-grid {
+        grid-template-columns: 1fr;
+    }
+    .footer-top {
+        flex-direction: column;
+    }
+}
+.certification img {
+    width: 150px; 
+    height: auto;  
+    margin-bottom: 15px;
+}
+
+.info-left p, .info-right p {
+    margin-bottom: 8px;
+}
+
+.bank-section h4 {
+    margin-bottom: 15px;
+}
+
+.bank-placeholder img {
+    width: 100%;
+    height: auto;
+}

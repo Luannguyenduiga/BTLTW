@@ -3,10 +3,16 @@ async function renderPic() {
   const grid1 = document.getElementById('productGrid1');
   const grid2 = document.getElementById('productGrid2');
   const grid3 = document.getElementById('productGrid3');
+  const grid4 = document.getElementById('productGrid4');
+  const grid5 = document.getElementById('productGrid5');
 
   try {
     const response = await fetch('http://localhost:3000/products');
     const products = await response.json();
+
+    const dienthoai = products.filter(p => p.category_id == 1);
+    const laptop = products.filter(p => p.category_id == 2);
+    const linhkien = products.filter(p => p.category_id == 3);
 
     // Danh sách linh kiện
     grid.innerHTML = products.map(product => `
@@ -14,40 +20,76 @@ async function renderPic() {
         <img src="http://localhost:3000${product.image_url}">
         <h4>${product.name}</h4>
         <p class="price">${Number(product.price).toLocaleString()}₫</p>
+        <button class="btn-buy">
+                Thêm vào giỏ hàng
+            </button>
       </div>
     `).join('');
 
-    //SẢN PHẨM BÁN CHẠY (3 sản phẩm)
-    // slice(0,3) để lấy 3 sản phẩm đầu tiên từ mảng products và hiển thị chúng trong grid1. Mỗi sản phẩm được hiển thị dưới dạng một thẻ div với lớp product-card, chứa hình ảnh, tên và giá của sản phẩm.
-    grid1.innerHTML = products.slice(0,3).map(product => `
+    //SẢN PHẨM BÁN CHẠY (4 sản phẩm)
+    // slice(0,4) để lấy 4 sản phẩm đầu tiên từ mảng products và hiển thị chúng trong grid1. Mỗi sản phẩm được hiển thị dưới dạng một thẻ div với lớp product-card, chứa hình ảnh, tên và giá của sản phẩm.
+    grid1.innerHTML = products.slice(0, 3).map(product => `
       <div class="product-card">
         <img src="http://localhost:3000${product.image_url}">
         <h4>${product.name}</h4>
         <p class="price">${Number(product.price).toLocaleString()}₫</p>
+        <button class="btn-buy">
+                Thêm vào giỏ hàng
+            </button>
       </div>
     `).join('');
 
-    grid2.innerHTML = products.slice(0,3).map(product => `
+    grid2.innerHTML = products.slice(0, 3).map(product => `
       <div class="product-card">
         <img src="http://localhost:3000${product.image_url}">
         <h4>${product.name}</h4>
         <p class="price">${Number(product.price).toLocaleString()}₫</p>
+        <button class="btn-buy">
+                Thêm vào giỏ hàng
+            </button>
       </div>
     `).join('');
 
-    
+
     //Grid khác
-    grid3.innerHTML = products.slice(0,6).map(product => `
+    grid3.innerHTML = products.slice(0, 6).map(product => `
       <div class="product-card">
         <img src="http://localhost:3000${product.image_url}">
         <h4>${product.name}</h4>
         <p class="price">${Number(product.price).toLocaleString()}₫</p>
+        <button class="btn-buy">
+                Thêm vào giỏ hàng
+            </button>
+      </div>
+    `).join('');
+
+    grid4.innerHTML = products.slice(0, 6).map(product => `
+      <div class="product-card">
+        <img src="http://localhost:3000${product.image_url}">
+        <h4>${product.name}</h4>
+        <p class="price">${Number(product.price).toLocaleString()}₫</p>
+        <button class="btn-buy">
+                Thêm vào giỏ hàng
+            </button>
+      </div>
+    `).join('');
+
+    grid5.innerHTML = products.slice(0, 6).map(product => `
+      <div class="product-card">
+        <img src="http://localhost:3000${product.image_url}">
+        <h4>${product.name}</h4>
+        <p class="price">${Number(product.price).toLocaleString()}₫</p>
+        <button class="btn-buy">
+                Thêm vào giỏ hàng
+            </button>
       </div>
     `).join('');
 
   } catch (error) {
     console.error('Error fetching products:', error);
   }
+
+
 }
 
 // Gọi hàm để hiển thị sản phẩm khi trang được tải

@@ -7,7 +7,9 @@
 }
 .row{
     display: flex;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap;  */
+    /* gap: 50px; */
+
 }
 .col-1{
     width: 8.33%;
@@ -35,6 +37,7 @@
 }
 .col-9{
     width: 75%;
+    margin-bottom: 0;
 }
 .col-10{
     width: 83.33%;
@@ -44,4 +47,5 @@
 }
 .col-12{
     width: 100%;
+    padding: 0 1px;
 }
