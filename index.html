@@ -66,7 +66,7 @@
                     <div class="avatar"></div>
                     <div class="user-text">
                         <p class="small-text">Xin chào, </p>
-                        <span class="small-text">Luân Nguyễn</span>
+                        <a class="small-text" href="./pages/adminpage.html">Luân Nguyễn</a>
                     </div>
                     <a href="#" class="cart-wrapper">
                         <div class="cart-icon-container">
@@ -85,39 +85,9 @@
         </div>
     </div>
 
-
     <div class="container">
         <div class="row">
-            <div class="col-12">
-                <div class="slider-container">
-                    <div class="slider">
-                        <div class="slide"><img src="./assets/images/banner/banner1.jpg" alt="Banner 1"></div>
-                        <div class="slide"><img src="./assets/images/banner/banner2.jpg" alt="Banner 2"></div>
-                        <div class="slide"><img src="./assets/images/banner/banner3.jpg" alt="Banner 3"></div>
-                        <div class="slide"><img src="./assets/images/banner/banner4.jpg" alt="Banner 4"></div>
-                        <div class="slide"><img src="./assets/images/banner/banner5.jpg" alt="Banner 5"></div>
-                        <div class="slide"><img src="./assets/images/banner/banner6.jpg" alt="Banner 6"></div>
-                    </div>
-
-                    <button class="prev" onclick="moveSlide(-1)">&#10094;</button>
-                    <button class="next" onclick="moveSlide(1)">&#10095;</button>
-
-                    <div class="dots">
-                        <span class="dot" onclick="currentSlide(0)"></span>
-                        <span class="dot" onclick="currentSlide(1)"></span>
-                        <span class="dot" onclick="currentSlide(2)"></span>
-                        <span class="dot" onclick="currentSlide(3)"></span>
-                        <span class="dot" onclick="currentSlide(4)"></span>
-                        <span class="dot" onclick="currentSlide(5)"></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="container">
-        <div class="row">
-            <div class="col-3">
+            <div class="col-3" id="list-filter">
                 <div class="filter-sidebar">
                     <div class="filter-group">
                         <h3 class="filter-title">Khoảng giá</h3>
@@ -159,19 +129,6 @@
 
                     <div class="filter-group">
                         <div class="filter-header">
-                            <h3 class="filter-title">Series model</h3>
-                        </div>
-                        <div class="filter-options">
-                            <label><input type="checkbox"> ASUS ExpertBook</label>
-                            <label><input type="checkbox"> ASUS ROG Gaming</label>
-                            <label><input type="checkbox"> ASUS TUF Gaming</label>
-                            <label><input type="checkbox"> ASUS Vivobook</label>
-                        </div>
-                        <a href="#" class="view-more">Xem thêm</a>
-                    </div>
-
-                    <div class="filter-group">
-                        <div class="filter-header">
                             <h3 class="filter-title">Nhu cầu</h3>
                         </div>
                         <div class="filter-options">
@@ -184,7 +141,46 @@
                     </div>
                 </div>
             </div>
-            <div class="col-9"></div>
+
+            <div class="col-9">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="slider-container">
+                                <div class="slider">
+                                    <div class="slide"><img src="./assets/images/banner/banner1.jpg" alt="Banner 1">
+                                    </div>
+                                    <div class="slide"><img src="./assets/images/banner/banner2.jpg" alt="Banner 2">
+                                    </div>
+                                    <div class="slide"><img src="./assets/images/banner/banner3.jpg" alt="Banner 3">
+                                    </div>
+                                    <div class="slide"><img src="./assets/images/banner/banner4.jpg" alt="Banner 4">
+                                    </div>
+                                    <div class="slide"><img src="./assets/images/banner/banner5.jpg" alt="Banner 5">
+                                    </div>
+                                    <div class="slide"><img src="./assets/images/banner/banner6.jpg" alt="Banner 6">
+                                    </div>
+                                </div>
+
+                                <button class="prev" onclick="moveSlide(-1)">&#10094;</button>
+                                <button class="next" onclick="moveSlide(1)">&#10095;</button>
+
+                                <div class="dots">
+                                    <span class="dot" onclick="currentSlide(0)"></span>
+                                    <span class="dot" onclick="currentSlide(1)"></span>
+                                    <span class="dot" onclick="currentSlide(2)"></span>
+                                    <span class="dot" onclick="currentSlide(3)"></span>
+                                    <span class="dot" onclick="currentSlide(4)"></span>
+                                    <span class="dot" onclick="currentSlide(5)"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <img src="https://lh3.googleusercontent.com/k3IbrtQGh8Iv8DxoW-GECO46wZC52EuKFlEuIzO89HH3pHzGQsJkY6nDwMb6Vlk7BzsswwSP8mNoZ6Svcmr6MkyH_LaPmbCN=w184-rw"
+                class="banner-CTKM" loading="eager" hover="zoom" decoding="async" alt="Tổng hợp CTKM - 2026"
+                fetchpriority="high" style="width: 40%; height: 100%; object-fit: cover;">
         </div>
     </div>
 
