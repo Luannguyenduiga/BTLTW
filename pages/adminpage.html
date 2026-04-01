@@ -56,8 +56,10 @@
         height: 45px;
         background-image: url('https://img.freepik.com/premium-vector/user-profile-icon-vector-4_666870-1751.jpg?semt=ais_rp_progressive&w=740&q=80');
         border-radius: 50%;
-        background-size: cover; /* Ảnh sẽ được cắt để vừa với khung hình */
-        background-position: center; /* Ảnh sẽ được căn giữa trong khung hình */
+        background-size: cover;
+        /* Ảnh sẽ được cắt để vừa với khung hình */
+        background-position: center;
+        /* Ảnh sẽ được căn giữa trong khung hình */
     }
 
     .status {
@@ -176,6 +178,17 @@
         padding: 5px;
         text-align: center;
     }
+
+    .desc-cell {
+        max-width: 200px;
+        /* Giới hạn độ rộng */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        /* Tự thêm dấu ... */
+        color: #666;
+        font-size: 13px;
+    }
 </style>
 
 <body>
@@ -229,27 +242,13 @@
                             <th>ID</th>
                             <th>TÊN</th>
                             <th>GIÁ</th>
-                            <th>G.GIÁ</th>
                             <th>DANH MỤC</th>
-                            <th>HÃNG</th>
                             <th>STATUS</th>
                             <th>ACTION</th>
+                            <th>MÔ TẢ</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>01</td>
-                            <td>Sản phẩm mẫu A</td>
-                            <td>1.000.000đ</td>
-                            <td>10%</td>
-                            <td>Điện tử</td>
-                            <td>Sony</td>
-                            <td><span class="status-active">Active</span></td>
-                            <td class="actions">
-                                <button class="edit"onclick="window.location.href='post.html'">Edit </button>
-                                <button class="delete">Delete</button>
-                            </td>
-                        </tr>
+                    <tbody id="productBody">
                     </tbody>
                 </table>
             </section>
@@ -259,6 +258,55 @@
             </footer>
         </main>
     </div>
+    <script>
+        async function loadAdminProducts() {
+            try {
+                const response = await fetch('http://localhost:3000/admin/products');
+                const products = await response.json();
+
+                const tbody = document.getElementById('productBody');
+                tbody.innerHTML = '';
+
+                products.forEach(p => {
+                    const tr = document.createElement('tr');
+
+                    tr.innerHTML = `
+                <td>#${p.product_id}</td>
+                <td style="font-weight: 600;">${p.product_name}</td>
+                <td style="color: #27ae60; font-weight: bold;">
+                    ${p.price.toLocaleString('vi-VN')}đ
+                </td>
+                <td>${p.category_name || 'Chưa rõ'}</td>
+                <td>${p.brand_name || 'Chưa rõ'}</td>
+                <td>
+                    <span style="color: ${p.status === 'active' ? '#2ecc71' : '#e74c3c'}">
+                        ● ${p.status.toUpperCase()}
+                    </span>
+                </td>
+                <td class="desc-cell" title="${p.description || ''}">
+    ${p.description || 'Không có mô tả'}
+</td>
+                <td class="actions">
+                    <button onclick="editProduct(${p.product_id})">Sửa</button>
+                    <button onclick="deleteProduct(${p.product_id})" style="color:red">Xóa</button>
+                </td>
+            `;
+                    tbody.appendChild(tr);
+                });
+            } catch (error) {
+                console.error("Lỗi load bảng:", error);
+            }
+        }
+
+        // Hàm Sửa sản phẩm (chưa triển khai)
+        function editProduct(id) {
+            window.location.href = `editproduct.html?id=${id}`;
+        }
+
+
+        // Gọi hàm khi trang web tải xong
+        window.onload = loadAdminProducts;
+    </script>
 </body>
 
 </html>
