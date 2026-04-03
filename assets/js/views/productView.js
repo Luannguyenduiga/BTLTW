@@ -24,7 +24,7 @@ async function fetchAndRender(categoryId, elementId, limit = null) {
         grid.innerHTML = products.map(product => `
             <div class="product-card">
                 <div class="product-image">
-                    <img src="http://localhost:3000${product.image_url}" alt="${product.name}">
+                    <img src="http://localhost:3000${product.image_url}" alt="${product.image_url}"> 
                 </div>
                 <div class="product-info">
                     <h4>${product.name}</h4>
