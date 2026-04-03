@@ -38,7 +38,7 @@ export default async function productController(fastify, options) {
         }
     });
 
-    // GET product with Category 
+     
     // GET product with Category 
     fastify.get('/products/category/:id', async (req, reply) => {
         try {
@@ -69,6 +69,65 @@ export default async function productController(fastify, options) {
         }
     });
 
+    fastify.get('/edit/product/:id', async (req, reply) => {
+        try {
+            const id = parseInt(req.params.id);
+            const result = await sql.query`
+            SELECT 
+            p.product_id,
+            p.name,
+            p.price,
+	        p.description,
+            h.image_url
+        FROM SANPHAM p
+        JOIN HINHANH_SP h 
+        ON p.product_id = h.product_id
+        WHERE p.product_id = ${id} `;
+            reply.send(result.recordset[0]);
+        } catch (err) {
+            req.log.error(err);
+            reply.code(500).send({ error: 'Lỗi lấy dữ liệu sản phẩm' });
+        }
+    });
+
+    fastify.put('/update/product/:id', async (req, reply) => {
+        try {
+            const id = parseInt(req.params.id);
+            let name, price, description;
+
+            // KIỂM TRA: Nếu request gửi lên có kèm file (multipart là dạng form-data )
+            if (req.isMultipart()) {
+                const data = await req.file();
+                // Lấy giá trị từ các fields của FormData
+                name = data.fields.name?.value;
+                price = parseInt(data.fields.price?.value);
+                description = data.fields.description?.value || '';
+
+            } else {
+                // Nếu KHÔNG có file (gửi dạng JSON bình thường)
+                name = req.body.name;
+                price = parseInt(req.body.price);
+                description = req.body.description || '';
+            }
+
+            // Thực hiện Update
+            await sql.query`
+            UPDATE SANPHAM
+            SET name = ${name}, 
+                price = ${price}, 
+                description = ${description}
+            WHERE product_id = ${id}
+        `;
+
+            reply.send({ success: true, message: 'Cập nhật thành công!' });
+        } catch (err) {
+            req.log.error(err);
+            reply.code(500).send({ error: 'Lỗi server khi cập nhật' });
+        }
+    });
+
+
+
     // POST products
     fastify.post('/products', async (req, reply) => {
         try {
@@ -92,7 +151,7 @@ export default async function productController(fastify, options) {
             const result = await sql.query`
                 INSERT INTO SANPHAM(name, price, category_id, brand_id, description, status)
                 OUTPUT INSERTED.product_id
-            VALUES(${name}, ${price}, ${category_id}, ${brand_id}, ${description}, 'active')`;
+        VALUES(${name}, ${price}, ${category_id}, ${brand_id}, ${description}, 'active')`;
 
             const productId = result.recordset[0].product_id;
             const folderName = 'linhkien';
