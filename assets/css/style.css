@@ -273,6 +273,16 @@ body {
     color: white;
 }
 
+.cart-badge {
+    transition: transform 0.3s ease;
+}
+
+/* Hiệu ứng khi số nhảy */
+.cart-badge.bump {
+    transform: scale(1.5);
+    background-color: #ff4757; /* Đổi màu nhẹ để gây chú ý */
+}
+
 .brand-container {
     display: flex;
     flex-wrap: wrap;
