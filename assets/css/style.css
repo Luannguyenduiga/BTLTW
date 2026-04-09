@@ -470,3 +470,93 @@ body {
     margin: 20px auto; /* Căn giữa nút và tạo khoảng cách trên dưới */
 }
 
+/* Container chứa cả chuông và bảng */
+.notice-wrapper {
+    position: relative; /* Để cái bảng căn theo cái chuông */
+    display: inline-block;
+}
+
+/* Bảng thông báo mặc định ẩn */
+.notice-dropdown {
+    position: absolute;
+    top: 100%; /* Hiện ngay dưới cái chuông */
+    right: 0;
+    width: 320px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+    z-index: 1000;
+    
+    /* Hiệu ứng ẩn hiện */
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+}
+
+/* Khi hover vào wrapper thì hiện bảng */
+.notice-wrapper:hover .notice-dropdown {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Header thông báo */
+.notice-header {
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+}
+.notice-header h3 {
+    font-size: 13px;
+    color: #888;
+    margin: 0;
+}
+
+/* Từng dòng thông báo */
+.notice-item {
+    display: flex;
+    padding: 15px;
+    gap: 12px;
+    border-bottom: 1px solid #f5f5f5;
+    transition: 0.2s;
+    cursor: pointer;
+}
+.notice-item:hover { background: #f9f9f9; }
+
+.notice-img img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+.notice-info{
+    text-align: left;
+}
+.notice-info strong {
+    font-size: 0.9rem;
+    display: block;
+    color: #333;
+}
+.notice-info p {
+    font-size: 0.8rem;
+    color: #666;
+    margin: 5px 0;
+    line-height: 1.4;
+}
+.notice-time {
+    font-size: 0.75rem;
+    color: #999;
+}
+
+/* Footer xem tất cả */
+.notice-footer {
+    padding: 10px;
+    text-align: center;
+}
+.notice-footer a {
+    text-decoration: none;
+    font-size: 0.85rem;
+    color: #0056b3;
+}
