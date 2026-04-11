@@ -1,23 +1,23 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     let currentIndex = 0;
     const slides = document.querySelector('.slider');
     const dots = document.querySelectorAll('.dot');
     const totalSlides = document.querySelectorAll('.slide').length;
 
     // Function to move slides
-    window.moveSlide = function(step) { 
+    window.moveSlide = function (step) {
         currentIndex = (currentIndex + step + totalSlides) % totalSlides; // Vòng lặp để đảm bảo chỉ số hợp lệ
         updateSlider(); // Cập nhật slider sau khi thay đổi chỉ số
     }
 
-    window.currentSlide = function(index) {
+    window.currentSlide = function (index) {
         currentIndex = index;
         updateSlider();
     }
 
     // Function to update slider position and active dot
     function updateSlider() {
-        if(!slides) return; // Phòng lỗi nếu không tìm thấy slider
+        if (!slides) return; // Phòng lỗi nếu không tìm thấy slider
         slides.style.transform = `translateX(-${currentIndex * 100}%)`;
         dots.forEach((dot, index) => {
             dot.classList.toggle('active', index === currentIndex);
@@ -70,12 +70,12 @@ function handleRange() {
 function handleInput(e) {
     let val = getRawValue(e.target.value);
     if (val > MAX_LIMIT) val = MAX_LIMIT;
-    
+
     e.target.value = formatNumber(val);
-    
+
     if (e.target.id === 'min-price-input') rangeMin.value = val;
     else rangeMax.value = val;
-    
+
     updateColor();
 }
 
@@ -83,6 +83,38 @@ rangeMin.addEventListener('input', handleRange);
 rangeMax.addEventListener('input', handleRange);
 minInput.addEventListener('input', handleInput);
 maxInput.addEventListener('input', handleInput);
+
+
+// Hiện số luowngk thông báo trong box
+function updateNoticeCount() {
+    const noticeBadge = document.querySelector('#notice-count');
+    if (!noticeBadge) return;
+
+    // 1. Kiểm tra xem trang này có menu thông báo không (như trang index)
+    const notices = document.querySelectorAll('.notice-item');
+
+    if (notices.length > 0) {
+        // Nếu có (trang index), đếm rồi lưu vào kho
+        const count = notices.length;
+        noticeBadge.innerText = count;
+        localStorage.setItem('savedNoticeCount', count); 
+        noticeBadge.style.display = 'block';
+    } else {
+        // Nếu không có (trang product), vào kho lấy số đã lưu ra dùng
+        const savedCount = localStorage.getItem('savedNoticeCount');
+        if (savedCount && savedCount !== "0") {
+            noticeBadge.innerText = savedCount;
+            noticeBadge.style.display = 'block';
+        } else {
+            noticeBadge.style.display = 'none';
+        }
+    }
+}
+
+// Gọi hàm này sau khi trang web đã load xong
+document.addEventListener('DOMContentLoaded', () => {
+    updateNoticeCount();
+});
 
 // Khởi tạo lần đầu
 updateColor();
