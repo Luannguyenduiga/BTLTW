@@ -12,7 +12,7 @@ async function fetchAndRender(categoryId, elementId, limit = null) {
         // Gọi đến API Fastify bạn vừa viết
         const response = await fetch(`http://localhost:3000/products/category/${categoryId}`);
         if (!response.ok) throw new Error('Network response was not ok');
-        
+
         let products = await response.json();
 
         // Nếu có yêu cầu giới hạn số lượng 
@@ -22,18 +22,20 @@ async function fetchAndRender(categoryId, elementId, limit = null) {
 
         // Render HTML vào Grid
         grid.innerHTML = products.map(product => `
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="http://localhost:3000${product.image_url}" alt="${product.image_url}"> 
+            <a href="../../pages/detailproduct.html?id=${product.product_id}" class="product-link" target="_blank">
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="http://localhost:3000${product.image_url}" alt="${product.image_url}"> 
+                    </div>
+                    <div class="product-info">
+                        <h4>${product.name}</h4>
+                        <p class="price">${Number(product.price).toLocaleString()}₫</p>
+                        <button class="btn-buy" data-id="${product.product_id}">
+                            Thêm vào giỏ hàng
+                        </button>
+                    </div>
                 </div>
-                <div class="product-info">
-                    <h4>${product.name}</h4>
-                    <p class="price">${Number(product.price).toLocaleString()}₫</p>
-                    <button class="btn-buy" data-id="${product.id}">
-                        Thêm vào giỏ hàng
-                    </button>
-                </div>
-            </div>
+            </a>
         `).join('');
 
     } catch (error) {
@@ -51,12 +53,12 @@ async function initApp() {
     await fetchAndRender(2, 'laptopGridPr', 3); // 3 sản phẩm bán chạy nhất của Laptop
     await fetchAndRender(1, 'dienthoaiGridPr', 3); // 3 sản phẩm bán chạy nhất của Điện thoại
     // 2. Render Danh sách Linh Kiện (Category 3)
-    await fetchAndRender(3, 'linhkienGrid',4);
+    await fetchAndRender(3, 'linhkienGrid', 4);
     await fetchAndRender(3, 'linhkienGrid1'); // Hiện ảnh bên trang Product
     // 3. Render Các loại Laptop (Category 2)
-    await fetchAndRender(2, 'laptopAigrid',4);
-    await fetchAndRender(2, 'laptopGamingGrid',4);
-    await fetchAndRender(2, 'laptopVPgrid',4);
+    await fetchAndRender(2, 'laptopAigrid', 4);
+    await fetchAndRender(2, 'laptopGamingGrid', 4);
+    await fetchAndRender(2, 'laptopVPgrid', 4);
     // Hiện ảnh bên trang Product
     await fetchAndRender(2, 'laptopAigrid1');
     await fetchAndRender(2, 'laptopGamingGrid1');
@@ -66,8 +68,66 @@ async function initApp() {
     await fetchAndRender(1, 'dienthoaiGrid1'); // Hiện ảnh bên trang Product
 }
 
+//Render sản phẩm chi tiết khi nhấn vào
+// Lấy id từ URL
+const params = new URLSearchParams(window.location.search);
+const productId = params.get("id");
+
+async function loadProductDetail() {
+    try {
+        const res = await fetch(`http://localhost:3000/product/${productId}`);
+        const product = await res.json();
+
+        const container = document.querySelector(".product.inform");
+
+        if (!product) {
+            container.innerHTML = "<p>Không tìm thấy sản phẩm</p>";
+            return;
+        }
+
+        container.innerHTML = `
+            <div class="row">
+                <!-- Cột ảnh -->
+                <div class="col-6">
+                    <div class="product-detail-image">
+                        <img src="http://localhost:3000${product.image_url}" alt="${product.name}">
+                    </div>
+                </div>
+
+                <!-- Information Product -->
+                <div class="col-6">
+                    <div class="product-detail-info">
+                        <h1>${product.name}</h1>
+
+                        <p class="price" style="font-size: 28px; color: red;">
+                            ${Number(product.price).toLocaleString()}₫
+                        </p>
+
+                        <p class="description">
+                            ${product.description || "Chưa có mô tả"}
+                        </p>
+                        <a>Chi tiết sản phẩm</a>
+                        <br>
+                        <button class="btn-buy-cart" data-id="${product.product_id}">
+                            Mua Ngay
+                        </button>
+                        <button class="btn-add-cart" data-id="${product.product_id}">
+                            Thêm vào giỏ hàng
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    } catch (err) {
+        console.error("Lỗi load detail:", err);
+        document.querySelector(".product.inform").innerHTML = "<p>Lỗi tải sản phẩm</p>";
+    }
+}
+
+loadProductDetail();
+
 // 1. Tạo biến lưu trữ giỏ hàng (State)
-let cart = []; 
+let cart = [];
 
 // 2. Chọn phần tử hiển thị số lượng (Cái badge màu đỏ của bạn)
 const cartBadge = document.querySelector("#shopping-cart");
@@ -75,24 +135,24 @@ const cartBadge = document.querySelector("#shopping-cart");
 // 3. Hàm cập nhật giao diện số lượng
 function updateCartBadge() {
     // Tính tổng số lượng item trong giỏ
-    cartBadge.innerText = cart.length; 
-    
-   // hiệu ứng
+    cartBadge.innerText = cart.length;
+
+    // hiệu ứng
     cartBadge.classList.add("bump");
     setTimeout(() => cartBadge.classList.remove("bump"), 300);
 }
 
 // 4. Lắng nghe sự kiện (Dùng Event Delegation để tối ưu hiệu năng)
-document.addEventListener("click", function(e) {
+document.addEventListener("click", function (e) {
     if (e.target && e.target.classList.contains("btn-buy")) {
         const productId = e.target.getAttribute("data-id");
-        
+
         // Thêm sản phẩm vào mảng (tạm thời thêm ID)
         cart.push(productId);
-        
+
         // Gọi hàm cập nhật số
         updateCartBadge();
-        
+
         console.log("Giỏ hàng hiện tại:", cart);
     }
 });
