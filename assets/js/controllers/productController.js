@@ -4,6 +4,7 @@ import { pipeline } from 'stream';
 import { promisify } from 'util';
 import { fileURLToPath } from 'url';
 import { sql } from '../configDB.js';
+import { error } from 'console';
 
 const pump = promisify(pipeline);
 const __filename = fileURLToPath(import.meta.url);
@@ -38,7 +39,7 @@ export default async function productController(fastify, options) {
         }
     });
 
-     
+
     // GET product with Category 
     fastify.get('/products/category/:id', async (req, reply) => {
         try {
@@ -189,4 +190,32 @@ export default async function productController(fastify, options) {
             return reply.code(500).send({ error: "Lỗi SQL", detail: err.message });
         }
     });
+
+    //GET product detail
+    fastify.get('/product/:id', async (req, res) => {
+        try {
+            const id = parseInt(req.params.id);
+            const result = await sql.query`
+            SELECT
+            p.product_id, 
+                p.name, 
+                p.price,
+                p.description,
+                CASE 
+                    WHEN h.image_url IS NOT NULL 
+                    THEN CONCAT('/images/', h.image_url)
+                    ELSE '/images/default-placeholder.png' 
+                END AS image_url
+            FROM SANPHAM p
+            LEFT JOIN HINHANH_SP h 
+                ON p.product_id = h.product_id AND h.is_main = 1
+            WHERE p.product_id = ${id} AND p.status='active'
+        `;
+            res.send(result.recordset[0]); //The array contains the data rows that the query returns. This is return value begin
+        } catch {
+            req.log.error(error);
+            res.code(500).send({ error: 'Lỗi lấy dữ liệu hiển thị' });
+        }
+    });
+
 }
