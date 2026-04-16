@@ -218,4 +218,77 @@ export default async function productController(fastify, options) {
         }
     });
 
+    // POST: Thêm hoặc cập nhật số lượng trong giỏ hàng
+    fastify.post('/api/cart/add', async (req, reply) => {
+        try {
+            const { product_id, user_id, quantity } = req.body;
+
+            // 1. Kiểm tra sản phẩm đã tồn tại trong giỏ hàng của User này chưa
+            const checkResult = await sql.query`
+            SELECT quantity FROM GIOHANG 
+            WHERE user_id = ${user_id} AND product_id = ${product_id}`;
+
+            if (checkResult.recordset.length > 0) {
+                // 2. Nếu đã có, tiến hành UPDATE cộng dồn số lượng
+                await sql.query`
+                UPDATE GIOHANG 
+                SET quantity = quantity + ${quantity || 1} 
+                WHERE user_id = ${user_id} AND product_id = ${product_id}`;
+            } else {
+                // 3. Nếu chưa có, tiến hành INSERT mới
+                await sql.query`
+                INSERT INTO GIOHANG (user_id, product_id, quantity) 
+                VALUES (${user_id}, ${product_id}, ${quantity || 1})`;
+            }
+
+            return { success: true, message: "Đã cập nhật giỏ hàng" };
+        } catch (err) {
+            console.error("Lỗi API Cart POST:", err.message);
+            return reply.code(500).send({ error: 'Lỗi server', message: err.message });
+        }
+    });
+
+    // GET: Lấy danh sách sản phẩm trong giỏ hàng theo UserID
+    fastify.get('/api/cart/:user_id', async (req, reply) => {
+        try {
+            const { user_id } = req.params;
+
+            const result = await sql.query`
+            SELECT 
+                g.product_id, 
+                g.quantity, 
+                p.name AS product_name, 
+                p.price, 
+                h.image_url
+            FROM GIOHANG g
+            JOIN SANPHAM p ON g.product_id = p.product_id
+            LEFT JOIN HINHANH_SP h ON p.product_id = h.product_id AND h.is_main = 1
+            WHERE g.user_id = ${user_id}`;
+
+            return result.recordset;
+        } catch (err) {
+            console.error("Lỗi API Cart GET:", err.message);
+            return reply.code(500).send({ error: "Lỗi SQL", detail: err.message });
+        }
+    });
+
+    // DELETE: Xóa sản phẩm khỏi giỏ hàng
+    // Sửa dòng này:
+    fastify.delete('/api/cart/remove', async (req, reply) => {
+        try {
+            // Fastify tự bóc tách ?product_id=5&user_id=3 vào req.query
+            const { product_id, user_id } = req.query;
+
+            console.log("Đang xóa SP:", product_id, "của User:", user_id);
+
+            await sql.query`
+            DELETE FROM GIOHANG 
+            WHERE user_id = ${user_id} AND product_id = ${product_id}`;
+
+            return { success: true, message: "Đã xóa xong" };
+        } catch (err) {
+            return reply.code(500).send({ error: err.message });
+        }
+    });
+
 }
