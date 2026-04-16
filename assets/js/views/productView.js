@@ -22,7 +22,7 @@ async function fetchAndRender(categoryId, elementId, limit = null) {
 
         // Render HTML vào Grid
         grid.innerHTML = products.map(product => `
-            <a href="../../pages/detailproduct.html?id=${product.product_id}" class="product-link" target="_blank">
+            <div class="product-link" onclick="window.open('../../pages/detailproduct.html?id=${product.product_id}', '_blank')">
                 <div class="product-card">
                     <div class="product-image">
                         <img src="http://localhost:3000${product.image_url}" alt="${product.image_url}"> 
@@ -30,12 +30,13 @@ async function fetchAndRender(categoryId, elementId, limit = null) {
                     <div class="product-info">
                         <h4>${product.name}</h4>
                         <p class="price">${Number(product.price).toLocaleString()}₫</p>
-                        <button class="btn-buy" data-id="${product.product_id}">
+                        <button class="btn-buy" 
+                        onclick="event.stopPropagation(); addToCart('${product.product_id}', '${product.name}', ${product.price})">
                             Thêm vào giỏ hàng
                         </button>
                     </div>
                 </div>
-            </a>
+            </div>
         `).join('');
 
     } catch (error) {
@@ -156,6 +157,41 @@ document.addEventListener("click", function (e) {
         console.log("Giỏ hàng hiện tại:", cart);
     }
 });
+
+async function loadCartToSidebar() {
+    const cartDiv = document.querySelector('.product-shopping');
+    const cartEmpty = document.querySelector('.cart-empty');
+
+    // Giả sử bạn thêm 1 cái p để hiện thông báo trống
+    const emptyMsg = cartEmpty.querySelector('p');
+    const emptyImg = cartEmpty.querySelector('img');
+
+    const userId = 3;
+    const res = await fetch(`http://localhost:3000/api/cart/${userId}`);
+    const cartItems = await res.json();
+
+    if (cartItems.length > 0) {
+        // Có hàng: Ẩn hình ảnh & chữ trống trải
+        if (emptyMsg) emptyMsg.style.display = 'none';
+        if (emptyImg) emptyImg.style.display = 'none';
+
+        cartDiv.innerHTML = cartItems.map(item => `
+            <div class="cart-item">
+                <img src="http://localhost:3000/${item.image_url}" alt="${item.product_name}">
+                <div class="cart-item-info">
+                    <p class="name">${item.product_name}</p>
+                    <p class="price">${Number(item.price).toLocaleString()}₫ x ${item.quantity}</p>
+                </div>
+                <button class="remove-btn" onclick="removeFromCart(event, '${item.product_id}')">×</button>
+            </div>
+        `).join('');
+    } else {
+        // Trống: Hiện lại thông báo
+        if (emptyMsg) emptyMsg.style.display = 'block';
+        if (emptyImg) emptyImg.style.display = 'block';
+        cartDiv.innerHTML = "";
+    }
+}
 
 // Chạy hàm khởi tạo
 document.addEventListener('DOMContentLoaded', initApp);
