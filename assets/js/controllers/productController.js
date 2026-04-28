@@ -1,27 +1,29 @@
-import path from 'path';
-import fs from 'fs';
-import { pipeline } from 'stream';
-import { promisify } from 'util';
-import { fileURLToPath } from 'url';
-import { sql } from '../configDB.js';
-import { error } from 'console';
+import path from "path";
+import fs from "fs";
+import { pipeline } from "stream";
+import { promisify } from "util";
+import { fileURLToPath } from "url";
+import { sql } from "../configDB.js";
+import { error } from "console";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 const pump = promisify(pipeline);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const IMAGE_ROOT = path.join(__dirname, '../../images');
+const IMAGE_ROOT = path.join(__dirname, "../../images");
+const JWT_SECRET = "fullstack-computer-secret-2026";
 
 // Export function ra ngoài để đăng ký vào Fastify
 export default async function productController(fastify, options) {
+  // Đảm bảo thư mục tồn tại
+  if (!fs.existsSync(IMAGE_ROOT)) fs.mkdirSync(IMAGE_ROOT, { recursive: true });
 
-    // Đảm bảo thư mục tồn tại
-    if (!fs.existsSync(IMAGE_ROOT)) fs.mkdirSync(IMAGE_ROOT, { recursive: true });
-
-    // GET products
-    fastify.get('/products', async (req, reply) => {
-        try {
-            const result = await sql.query`
+  // GET products
+  fastify.get("/products", async (req, reply) => {
+    try {
+      const result = await sql.query`
                 SELECT 
                     p.product_id, p.name, p.price,
                     CASE 
@@ -32,21 +34,20 @@ export default async function productController(fastify, options) {
                 LEFT JOIN HINHANH_SP h ON p.product_id = h.product_id AND h.is_main = 1
                 WHERE p.status='active'
                 ORDER BY p.product_id DESC`;
-            reply.send(result.recordset);
-        } catch (err) {
-            req.log.error(err);
-            reply.code(500).send({ error: 'Lỗi lấy dữ liệu hiển thị' });
-        }
-    });
+      reply.send(result.recordset);
+    } catch (err) {
+      req.log.error(err);
+      reply.code(500).send({ error: "Lỗi lấy dữ liệu hiển thị" });
+    }
+  });
 
+  // GET product with Category
+  fastify.get("/products/category/:id", async (req, reply) => {
+    try {
+      const id = parseInt(req.params.id); // Lấy ID từ URL
 
-    // GET product with Category 
-    fastify.get('/products/category/:id', async (req, reply) => {
-        try {
-            const id = parseInt(req.params.id); // Lấy ID từ URL
-
-            // Sử dụng LTRIM và RTRIM (hoặc TRIM với SQL Server đời mới) để dọn dẹp chuỗi
-            const result = await sql.query`
+      // Sử dụng LTRIM và RTRIM (hoặc TRIM với SQL Server đời mới) để dọn dẹp chuỗi
+      const result = await sql.query`
             SELECT 
                 p.product_id,
                 p.name,
@@ -62,18 +63,18 @@ export default async function productController(fastify, options) {
             ORDER BY p.product_id DESC
         `;
 
-            // Trả về dữ liệu đã được làm sạch
-            reply.send(result.recordset);
-        } catch (err) {
-            req.log.error(err);
-            reply.code(500).send({ error: 'Lỗi lấy dữ liệu hiển thị' });
-        }
-    });
+      // Trả về dữ liệu đã được làm sạch
+      reply.send(result.recordset);
+    } catch (err) {
+      req.log.error(err);
+      reply.code(500).send({ error: "Lỗi lấy dữ liệu hiển thị" });
+    }
+  });
 
-    fastify.get('/edit/product/:id', async (req, reply) => {
-        try {
-            const id = parseInt(req.params.id);
-            const result = await sql.query`
+  fastify.get("/edit/product/:id", async (req, reply) => {
+    try {
+      const id = parseInt(req.params.id);
+      const result = await sql.query`
             SELECT 
             p.product_id,
             p.name,
@@ -84,35 +85,34 @@ export default async function productController(fastify, options) {
         JOIN HINHANH_SP h 
         ON p.product_id = h.product_id
         WHERE p.product_id = ${id} `;
-            reply.send(result.recordset[0]);
-        } catch (err) {
-            req.log.error(err);
-            reply.code(500).send({ error: 'Lỗi lấy dữ liệu sản phẩm' });
-        }
-    });
+      reply.send(result.recordset[0]);
+    } catch (error) {
+      req.log.error(err);
+      reply.code(500).send({ error: "Lỗi lấy dữ liệu sản phẩm" });
+    }
+  });
 
-    fastify.put('/update/product/:id', async (req, reply) => {
-        try {
-            const id = parseInt(req.params.id);
-            let name, price, description;
+  fastify.put("/update/product/:id", async (req, reply) => {
+    try {
+      const id = parseInt(req.params.id);
+      let name, price, description;
 
-            // KIỂM TRA: Nếu request gửi lên có kèm file (multipart là dạng form-data )
-            if (req.isMultipart()) {
-                const data = await req.file();
-                // Lấy giá trị từ các fields của FormData
-                name = data.fields.name?.value;
-                price = parseInt(data.fields.price?.value);
-                description = data.fields.description?.value || '';
+      // KIỂM TRA: Nếu request gửi lên có kèm file (multipart là dạng form-data )
+      if (req.isMultipart()) {
+        const data = await req.file();
+        // Lấy giá trị từ các fields của FormData
+        name = data.fields.name?.value;
+        price = parseInt(data.fields.price?.value);
+        description = data.fields.description?.value || "";
+      } else {
+        // Nếu KHÔNG có file (gửi dạng JSON bình thường)
+        name = req.body.name;
+        price = parseInt(req.body.price);
+        description = req.body.description || "";
+      }
 
-            } else {
-                // Nếu KHÔNG có file (gửi dạng JSON bình thường)
-                name = req.body.name;
-                price = parseInt(req.body.price);
-                description = req.body.description || '';
-            }
-
-            // Thực hiện Update
-            await sql.query`
+      // Thực hiện Update
+      await sql.query`
             UPDATE SANPHAM
             SET name = ${name}, 
                 price = ${price}, 
@@ -120,64 +120,71 @@ export default async function productController(fastify, options) {
             WHERE product_id = ${id}
         `;
 
-            reply.send({ success: true, message: 'Cập nhật thành công!' });
-        } catch (err) {
-            req.log.error(err);
-            reply.code(500).send({ error: 'Lỗi server khi cập nhật' });
-        }
-    });
+      reply.send({ success: true, message: "Cập nhật thành công!" });
+    } catch (err) {
+      req.log.error(err);
+      reply.code(500).send({ error: "Lỗi server khi cập nhật" });
+    }
+  });
 
+  // POST products
+  fastify.post("/products", async (req, reply) => {
+    try {
+      if (!req.isMultipart()) {
+        return reply
+          .code(400)
+          .send({ error: "Dữ liệu không đúng định dạng Form" });
+      }
 
+      const data = await req.file();
+      if (!data)
+        return reply.code(400).send({ error: "Không tìm thấy file ảnh" });
 
-    // POST products
-    fastify.post('/products', async (req, reply) => {
-        try {
-            if (!req.isMultipart()) {
-                return reply.code(400).send({ error: "Dữ liệu không đúng định dạng Form" });
-            }
+      const name = data.fields.name?.value;
+      const price = parseInt(data.fields.price?.value);
+      const category_id = parseInt(data.fields.category_id?.value);
+      const brand_id = parseInt(data.fields.brand_id?.value);
+      const description = data.fields.description?.value || "";
 
-            const data = await req.file();
-            if (!data) return reply.code(400).send({ error: "Không tìm thấy file ảnh" });
+      if (!name || isNaN(price)) {
+        return reply.code(400).send({ error: "Tên hoặc Giá không hợp lệ" });
+      }
 
-            const name = data.fields.name?.value;
-            const price = parseInt(data.fields.price?.value);
-            const category_id = parseInt(data.fields.category_id?.value);
-            const brand_id = parseInt(data.fields.brand_id?.value);
-            const description = data.fields.description?.value || '';
-
-            if (!name || isNaN(price)) {
-                return reply.code(400).send({ error: "Tên hoặc Giá không hợp lệ" });
-            }
-
-            const result = await sql.query`
+      const result = await sql.query`
                 INSERT INTO SANPHAM(name, price, category_id, brand_id, description, status)
                 OUTPUT INSERTED.product_id
         VALUES(${name}, ${price}, ${category_id}, ${brand_id}, ${description}, 'active')`;
 
-            const productId = result.recordset[0].product_id;
-            const folderName = 'linhkien';
-            const fileName = `${Date.now()}-${data.filename.replace(/\s+/g, '-')}`;
-            const dbPath = `${folderName}/${fileName}`;
-            const targetDir = path.join(IMAGE_ROOT, folderName);
+      const productId = result.recordset[0].product_id;
+      const folderName = "linhkien";
+      const fileName = `${Date.now()}-${data.filename.replace(/\s+/g, "-")}`;
+      const dbPath = `${folderName}/${fileName}`;
+      const targetDir = path.join(IMAGE_ROOT, folderName);
 
-            if (!fs.existsSync(targetDir)) fs.mkdirSync(targetDir, { recursive: true });
-            await pump(data.file, fs.createWriteStream(path.join(targetDir, fileName)));
+      if (!fs.existsSync(targetDir))
+        fs.mkdirSync(targetDir, { recursive: true });
+      await pump(
+        data.file,
+        fs.createWriteStream(path.join(targetDir, fileName)),
+      );
 
-            await sql.query`
+      await sql.query`
                 INSERT INTO HINHANH_SP (product_id, image_url, is_main)
                 VALUES (${productId}, ${dbPath}, 1)`;
 
-            return reply.send({ success: true, productId });
-        } catch (err) {
-            console.error("Lỗi:", err.message);
-            return reply.code(500).send({ error: 'Lỗi server', message: err.message });
-        }
-    });
+      return reply.send({ success: true, productId });
+    } catch (err) {
+      console.error("Lỗi:", err.message);
+      return reply
+        .code(500)
+        .send({ error: "Lỗi server", message: err.message });
+    }
+  });
 
-    // GET admin products
-    fastify.get('/admin/products', async (req, reply) => {
-        try {
-            const result = await sql.query`
+  // GET admin products
+  fastify.get("/admin/products", async (req, reply) => {
+    try {
+      const result = await sql.query`
                 SELECT 
                     p.product_id, p.name AS product_name, p.price, p.status,
                     p.description, p.discount_price, d.name AS category_name, h.name AS brand_name 
@@ -185,17 +192,17 @@ export default async function productController(fastify, options) {
                 LEFT JOIN DANHMUC d ON p.category_id = d.category_id
                 LEFT JOIN HANG h ON p.brand_id = h.brand_id
                 ORDER BY p.product_id DESC`;
-            return result.recordset;
-        } catch (err) {
-            return reply.code(500).send({ error: "Lỗi SQL", detail: err.message });
-        }
-    });
+      return result.recordset;
+    } catch (err) {
+      return reply.code(500).send({ error: "Lỗi SQL", detail: err.message });
+    }
+  });
 
-    //GET product detail
-    fastify.get('/product/:id', async (req, res) => {
-        try {
-            const id = parseInt(req.params.id);
-            const result = await sql.query`
+  //GET product detail
+  fastify.get("/product/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const result = await sql.query`
             SELECT
             p.product_id, 
                 p.name, 
@@ -211,49 +218,51 @@ export default async function productController(fastify, options) {
                 ON p.product_id = h.product_id AND h.is_main = 1
             WHERE p.product_id = ${id} AND p.status='active'
         `;
-            res.send(result.recordset[0]); //The array contains the data rows that the query returns. This is return value begin
-        } catch {
-            req.log.error(error);
-            res.code(500).send({ error: 'Lỗi lấy dữ liệu hiển thị' });
-        }
-    });
+      res.send(result.recordset[0]); //The array contains the data rows that the query returns. This is return value begin
+    } catch {
+      req.log.error(error);
+      res.code(500).send({ error: "Lỗi lấy dữ liệu hiển thị" });
+    }
+  });
 
-    // POST: Thêm hoặc cập nhật số lượng trong giỏ hàng
-    fastify.post('/api/cart/add', async (req, reply) => {
-        try {
-            const { product_id, user_id, quantity } = req.body;
+  // POST: Thêm hoặc cập nhật số lượng trong giỏ hàng
+  fastify.post("/api/cart/add", async (req, reply) => {
+    try {
+      const { product_id, user_id, quantity } = req.body;
 
-            // 1. Kiểm tra sản phẩm đã tồn tại trong giỏ hàng của User này chưa
-            const checkResult = await sql.query`
+      // 1. Kiểm tra sản phẩm đã tồn tại trong giỏ hàng của User này chưa
+      const checkResult = await sql.query`
             SELECT quantity FROM GIOHANG 
             WHERE user_id = ${user_id} AND product_id = ${product_id}`;
 
-            if (checkResult.recordset.length > 0) {
-                // 2. Nếu đã có, tiến hành UPDATE cộng dồn số lượng
-                await sql.query`
+      if (checkResult.recordset.length > 0) {
+        // 2. Nếu đã có, tiến hành UPDATE cộng dồn số lượng
+        await sql.query`
                 UPDATE GIOHANG 
                 SET quantity = quantity + ${quantity || 1} 
                 WHERE user_id = ${user_id} AND product_id = ${product_id}`;
-            } else {
-                // 3. Nếu chưa có, tiến hành INSERT mới
-                await sql.query`
+      } else {
+        // 3. Nếu chưa có, tiến hành INSERT mới
+        await sql.query`
                 INSERT INTO GIOHANG (user_id, product_id, quantity) 
                 VALUES (${user_id}, ${product_id}, ${quantity || 1})`;
-            }
+      }
 
-            return { success: true, message: "Đã cập nhật giỏ hàng" };
-        } catch (err) {
-            console.error("Lỗi API Cart POST:", err.message);
-            return reply.code(500).send({ error: 'Lỗi server', message: err.message });
-        }
-    });
+      return { success: true, message: "Đã cập nhật giỏ hàng" };
+    } catch (err) {
+      console.error("Lỗi API Cart POST:", err.message);
+      return reply
+        .code(500)
+        .send({ error: "Lỗi server", message: err.message });
+    }
+  });
 
-    // GET: Lấy danh sách sản phẩm trong giỏ hàng theo UserID
-    fastify.get('/api/cart/:user_id', async (req, reply) => {
-        try {
-            const { user_id } = req.params;
+  // GET: Lấy danh sách sản phẩm trong giỏ hàng theo UserID
+  fastify.get("/api/cart/:user_id", async (req, reply) => {
+    try {
+      const { user_id } = req.params;
 
-            const result = await sql.query`
+      const result = await sql.query`
             SELECT 
                 g.product_id, 
                 g.quantity, 
@@ -265,30 +274,80 @@ export default async function productController(fastify, options) {
             LEFT JOIN HINHANH_SP h ON p.product_id = h.product_id AND h.is_main = 1
             WHERE g.user_id = ${user_id}`;
 
-            return result.recordset;
-        } catch (err) {
-            console.error("Lỗi API Cart GET:", err.message);
-            return reply.code(500).send({ error: "Lỗi SQL", detail: err.message });
-        }
-    });
+      return result.recordset;
+    } catch (err) {
+      console.error("Lỗi API Cart GET:", err.message);
+      return reply.code(500).send({ error: "Lỗi SQL", detail: err.message });
+    }
+  });
 
-    // DELETE: Xóa sản phẩm khỏi giỏ hàng
-    // Sửa dòng này:
-    fastify.delete('/api/cart/remove', async (req, reply) => {
-        try {
-            // Fastify tự bóc tách ?product_id=5&user_id=3 vào req.query
-            const { product_id, user_id } = req.query;
+  // DELETE: Xóa sản phẩm khỏi giỏ hàng
+  // Sửa dòng này:
+  fastify.delete("/api/cart/remove", async (req, reply) => {
+    try {
+      // Fastify tự bóc tách ?product_id=5&user_id=3 vào req.query
+      const { product_id, user_id } = req.query;
 
-            console.log("Đang xóa SP:", product_id, "của User:", user_id);
+      console.log("Đang xóa SP:", product_id, "của User:", user_id);
 
-            await sql.query`
+      await sql.query`
             DELETE FROM GIOHANG 
             WHERE user_id = ${user_id} AND product_id = ${product_id}`;
 
-            return { success: true, message: "Đã xóa xong" };
-        } catch (err) {
-            return reply.code(500).send({ error: err.message });
-        }
-    });
+      return { success: true, message: "Đã xóa xong" };
+    } catch (err) {
+      return reply.code(500).send({ error: err.message });
+    }
+  });
 
+  // Route Đăng nhập
+  fastify.post("/auth/login", async (request, reply) => {
+    try {
+      const { username, password } = request.body;
+
+      if (!username || !password) {
+        return reply
+          .code(400)
+          .send({ message: "Vui lòng nhập tài khoản và mật khẩu" });
+      }
+
+      const result = await sql.query`
+            SELECT user_id, username, password AS db_password, full_name, role 
+            FROM NGUOIDUNG 
+            WHERE username = ${username} AND status = 'active'
+        `;
+
+      if (result.recordset.length === 0) {
+        return reply.code(401).send({ message: "Tài khoản không tồn tại" });
+      }
+
+      const user = result.recordset[0];
+
+      // --- SO SÁNH TRỰC TIẾP (KHÔNG DÙNG HASH) ---
+      // LTRIM().RTRIM() để tránh lỗi khoảng trắng thừa từ SQL Server
+      if (password !== user.db_password.trim()) {
+        return reply.code(401).send({ message: "Mật khẩu không chính xác" });
+      }
+
+      // Ký Token vẫn giữ nguyên để chạy hệ thống
+      const token = jwt.sign(
+        { user_id: user.user_id, role: user.role },
+        JWT_SECRET,
+        { expiresIn: "7d" },
+      );
+
+      return {
+        token,
+        user: {
+          username: user.username,
+          full_name: user.full_name,
+          role: user.role,
+        },
+      };
+    } catch (err) {
+      return reply
+        .code(500)
+        .send({ message: "Lỗi hệ thống", detail: err.message });
+    }
+  });
 }

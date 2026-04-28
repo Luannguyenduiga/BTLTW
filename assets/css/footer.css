@@ -7,7 +7,7 @@
 } */
 
 .footer {
-    background-color: #fff;
+    background: linear-gradient(135deg, #989899 0%, #525353 100%);
     padding-top: 30px;
     width: 100%;
 }
@@ -24,7 +24,12 @@
     min-width: 180px;
 }
 
+#contact-info p a{
+    color: #c6c6c9;
+}
+
 .footer-col h4 {
+    color: #fff;
     font-size: 14px;
     font-weight: 700;
     margin-bottom: 15px;
@@ -41,7 +46,7 @@
 
 .footer-col ul li a {
     text-decoration: none;
-    color: #666;
+    color: #282828;
     font-size: 13px;
 }
 
@@ -50,12 +55,13 @@
 }
 
 .phone-number {
-    color: #0056b3;
+    color: #414142;
     font-size: 14px;
     margin-bottom: 10px;
 }
 
 .social-list p {
+    color: #fff;
     font-size: 13px;
     margin-bottom: 8px;
     cursor: pointer;
@@ -122,6 +128,7 @@
 }
 
 .footer-bottom {
+    width: 100%;
     background-color: #f8f9fa;
     padding: 30px 0;
     font-size: 12px;
