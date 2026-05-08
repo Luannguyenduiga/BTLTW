@@ -116,13 +116,26 @@ async function loadProductDetail() {
                         <button class="btn-buy-cart" data-id="${product.product_id}">
                             Mua Ngay
                         </button>
-                        <button class="btn-add-cart" data-id="${product.product_id}">
+                        <button class="btn-add-cart" id="btn-detail-add-cart">
                             Thêm vào giỏ hàng
                         </button>
                     </div>
                 </div>
             </div>
         `;
+
+        // Gắn sự kiện "Thêm vào giỏ hàng" một cách an toàn bằng addEventListener
+        const btnAddCart = container.querySelector('#btn-detail-add-cart');
+        if (btnAddCart) {
+            btnAddCart.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (typeof window.addToCart === 'function') {
+                    window.addToCart(product.product_id, product.name, product.price);
+                } else {
+                    alert("Lỗi: Không tìm thấy hàm addToCart. Bạn hãy kiểm tra đã chèn file script.js vào detailproduct.html chưa?");
+                }
+            });
+        }
     } catch (err) {
         console.error("Lỗi load detail:", err);
         document.querySelector(".product.inform").innerHTML = "<p>Lỗi tải sản phẩm</p>";
@@ -197,7 +210,7 @@ async function loadCartToSidebar() {
 
         const userId = 3; // ID user cố định như trong code của bạn
 
-        if (!confirm("Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng?")) return;
+        if (!confirm("Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng?")) return; // !confirm là để hiện hộp thoại xác nhận trước khi xóa
 
         try {
             // 1. Gọi API xóa sản phẩm (Bạn cần đảm bảo Backend có endpoint này)

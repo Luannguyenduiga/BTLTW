@@ -191,7 +191,7 @@ window.removeFromCart = async function (event, productId) {
 
         if (result.success) {
             console.log("Xóa thành công trên DB");
-            await loadCartToSidebar(); // Vẽ lại giao diện
+            await loadCartToSidebar(); // Về lại giao diện
         }
     } catch (error) {
         console.error("Lỗi:", error);
@@ -203,3 +203,45 @@ window.removeFromCart = async function (event, productId) {
 if (rangeMin) {
     updateColor();
 }
+
+// Search Functionality
+document.addEventListener('DOMContentLoaded', async () => {
+    const searchBox = document.getElementById('search-box');
+    const searchKeywordsContainer = document.querySelector('.search-keywords');
+
+    if (searchBox && searchKeywordsContainer) {
+        let allProducts = [];
+        const originalKeywordsHTML = searchKeywordsContainer.innerHTML;
+        
+        // Fetch all products once for search
+        try {
+            const res = await fetch('http://localhost:3000/products');
+            if (res.ok) {
+                allProducts = await res.json();
+            }
+        } catch (error) {
+            console.error('Error fetching products for search:', error);
+        }
+
+        searchBox.addEventListener('input', (e) => {
+            const keyword = e.target.value.trim().toLowerCase();
+            
+            if (keyword === '') {
+                // Return to default static links or clear
+                searchKeywordsContainer.innerHTML = originalKeywordsHTML;
+                return;
+            }
+
+            const filteredProducts = allProducts.filter(p => p.name.toLowerCase().includes(keyword));
+
+            if (filteredProducts.length > 0) {
+                const resultsHTML = filteredProducts.slice(0, 5).map(p => 
+                    `<a href="${window.location.origin}/pages/detailproduct.html?id=${p.product_id}">${p.name}</a>`
+                ).join('');
+                searchKeywordsContainer.innerHTML = resultsHTML;
+            } else {
+                searchKeywordsContainer.innerHTML = `<span style="font-size: 14px; color: #999;">Không tìm thấy sản phẩm</span>`;
+            }
+        });
+    }
+});

@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Apple Education | Fullstack Computer - Chắp cánh tài năng trẻ</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --apple-blue: #0071e3;
+        --edu-purple: #6e8efb;
+        --edu-pink: #a777e3;
+        --dark: #1d1d1f;
+        --gray: #f5f5f7;
+        --white: #ffffff;
+        --gradient: linear-gradient(135deg, #6e8efb 0%, #a777e3 100%);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Lexend", sans-serif;
+        background-color: var(--white);
+        color: var(--dark);
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+
+      /* --- Animations --- */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .reveal {
+        animation: fadeInUp 0.8s ease forwards;
+      }
+
+      /* --- Hero Section --- */
+      .hero {
+        height: 100vh;
+        background: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: var(--white);
+        position: relative;
+        padding: 0 20px;
+      }
+
+      .hero-bg {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7)),
+          url("https://www.apple.com/v/education/college/j/images/overview/hero__enwa66m6m98y_large.jpg");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        opacity: 0.8;
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 10;
+        max-width: 1000px;
+      }
+
+      .hero-badge {
+        background: var(--gradient);
+        padding: 10px 25px;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        display: inline-block;
+        margin-bottom: 25px;
+        letter-spacing: 1px;
+      }
+
+      .hero h1 {
+        font-size: clamp(2.5rem, 6vw, 5rem);
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 20px;
+      }
+
+      .hero p {
+        font-size: clamp(1.1rem, 2vw, 1.6rem);
+        font-weight: 300;
+        margin-bottom: 40px;
+        color: #d2d2d7;
+      }
+
+      .hero-btns {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .btn-main {
+        padding: 18px 45px;
+        border-radius: 50px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: 0.3s;
+        font-size: 1.1rem;
+      }
+
+      .btn-primary {
+        background: var(--apple-blue);
+        color: white;
+      }
+      .btn-primary:hover {
+        background: #0077ed;
+        transform: scale(1.05);
+      }
+
+      .btn-video {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: white;
+        cursor: pointer;
+      }
+
+      .play-circle {
+        width: 50px;
+        height: 50px;
+        border: 2px solid white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.3s;
+      }
+
+      .btn-video:hover .play-circle {
+        background: white;
+        color: black;
+      }
+
+      /* --- Value Section (Scholarship) --- */
+      .scholarship-box {
+        padding: 120px 0;
+        background: var(--gray);
+        border-radius: 60px 60px 0 0;
+        margin-top: -60px;
+        position: relative;
+        z-index: 20;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 25px;
+      }
+
+      .section-header {
+        text-align: center;
+        margin-bottom: 70px;
+      }
+      .section-header h2 {
+        font-size: 3rem;
+        font-weight: 800;
+        color: var(--dark);
+      }
+
+      .value-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+      }
+
+      .value-card {
+        background: white;
+        padding: 50px 40px;
+        border-radius: 35px;
+        transition: 0.4s;
+        border: 1px solid rgba(0, 0, 0, 0.03);
+        text-align: left;
+      }
+
+      .value-card:hover {
+        transform: translateY(-15px);
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.08);
+      }
+
+      .value-card i {
+        font-size: 3rem;
+        margin-bottom: 25px;
+        display: block;
+        background: var(--gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .value-card h3 {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+        color: var(--apple-blue);
+      }
+
+      /* --- Feature Grid --- */
+      .feature-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+        gap: 80px;
+        padding: 100px 0;
+      }
+
+      .feature-img img {
+        width: 100%;
+        border-radius: 40px;
+        box-shadow: 0 40px 80px rgba(0, 0, 0, 0.1);
+      }
+
+      .feature-text h2 {
+        font-size: 3.5rem;
+        line-height: 1.1;
+        margin-bottom: 25px;
+      }
+
+      /* --- Video Modal --- */
+      .modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.95);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+      .modal-content {
+        width: 100%;
+        max-width: 1000px;
+        aspect-ratio: 16/9;
+        position: relative;
+      }
+      .modal-content iframe {
+        width: 100%;
+        height: 100%;
+        border-radius: 20px;
+      }
+      .close-modal {
+        position: absolute;
+        top: -50px;
+        right: 0;
+        color: white;
+        font-size: 2rem;
+        cursor: pointer;
+      }
+
+      /* --- Responsive --- */
+      @media (max-width: 992px) {
+        .feature-row {
+          grid-template-columns: 1fr;
+          text-align: center;
+          gap: 40px;
+        }
+        .hero h1 {
+          font-size: 3rem;
+        }
+      }
+    </style>
+      <link rel="stylesheet" href="../assets/css/responsive.css">
+</head>
+  <body>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-bg"></div>
+      <div class="hero-content">
+        <span class="hero-badge">BACK TO SCHOOL 2026</span>
+        <h1>Siêu phẩm cho sinh viên.<br />Giá trị cho tương lai.</h1>
+        <p>
+          Nhận gói hỗ trợ "Học bổng công nghệ" lên đến 7.000.000đ khi sở hữu Mac
+          hoặc iPad.
+        </p>
+        <div class="hero-btns">
+          <a href="#" class="btn-main btn-primary"
+            >Mua ngay với giá sinh viên</a
+          >
+          <div class="btn-video" onclick="toggleModal(true)">
+            <div class="play-circle"><i class="fa-solid fa-play"></i></div>
+            <span>Xem video truyền cảm hứng</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Value -->
+    <section class="scholarship-box">
+      <div class="container">
+        <div class="section-header">
+          <h2>Đặc quyền chỉ có tại Fullstack</h2>
+          <p>
+            Chúng tôi đồng hành cùng bạn trên con đường chinh phục tri thức.
+          </p>
+        </div>
+        <div class="value-grid">
+          <div class="value-card">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <h3>Học bổng trực tiếp</h3>
+            <p>
+              Giảm ngay 2.000.000đ cho iPad và lên đến 5.000.000đ cho MacBook.
+              Trừ trực tiếp vào giá bán.
+            </p>
+          </div>
+          <div class="value-card">
+            <i class="fa-solid fa-laptop-code"></i>
+            <h3>Value-Pack CNTT</h3>
+            <p>
+              Tặng kèm gói cài đặt phần mềm chuyên ngành và khóa học AI trị giá
+              3.000.000đ.
+            </p>
+          </div>
+          <div class="value-card">
+            <i class="fa-solid fa-shield-halved"></i>
+            <h3>Bảo hành ưu tiên</h3>
+            <p>
+              Hỗ trợ 1 đổi 1 trong 30 ngày và mượn máy thay thế miễn phí nếu cần
+              sửa chữa.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Feature: MacBook -->
+    <section class="container">
+      <div class="feature-row">
+        <div class="feature-img">
+          <img
+            src="https://cdn2.fptshop.com.vn/unsafe/828x0/filters:format(webp):quality(75)/macbook_neo_relay_slide_1_00e103bc9f.jpg"
+            alt="MacBook Student"
+          />
+        </div>
+        <div class="feature-text">
+          <h2>MacBook.<br />Bứt phá mọi dự án.</h2>
+          <p>
+            Với chip M-series thế hệ mới, MacBook giúp bạn cân mọi tác vụ từ
+            code, dựng phim đến thiết kế 3D mà vẫn đảm bảo thời lượng pin cả
+            ngày dài lên lớp.
+          </p>
+          <br />
+          <a href="#" class="btn-main btn-primary" style="background: #000"
+            >Khám phá các dòng Mac</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- Video Modal -->
+    <div class="modal" id="videoModal">
+      <div class="modal-content">
+        <span class="close-modal" onclick="toggleModal(false)">&times;</span>
+        <!-- Thay iframe bằng thẻ video -->
+        <video
+          id="eduVideo"
+          controls
+          style="
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            background: #000;
+          "
+        >
+          <source
+            src="../assets/video/Apple Education_ Ready for every learning opportunity.mp4"
+            type="video/mp4"
+          />
+          Trình duyệt của bạn không hỗ trợ thẻ video.
+        </video>
+      </div>
+    </div>
+    <footer
+      style="
+        background: var(--dark);
+        color: white;
+        padding: 80px 0;
+        text-align: center;
+      "
+    >
+      <div class="container">
+        <h2 style="margin-bottom: 20px">Fullstack Computer</h2>
+        <p>1800 3667 | cskh@fullstackcomputer.vn</p>
+        <p style="opacity: 0.5; margin-top: 20px">
+          © 2026 Fullstack Computer. Apple Education Program.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      function toggleModal(show) {
+        const modal = document.getElementById("videoModal");
+        const video = document.getElementById("eduVideo");
+
+        if (show) {
+          modal.style.display = "flex";
+          video.play(); // Tự động chạy video khi mở modal
+        } else {
+          modal.style.display = "none";
+          video.pause(); // Dừng video khi đóng modal
+          video.currentTime = 0; // Đặt lại video về giây đầu tiên
+        }
+      }
+
+      // Đóng modal khi click ra ngoài vùng nội dung
+      window.onclick = function (event) {
+        const modal = document.getElementById("videoModal");
+        if (event.target == modal) {
+          toggleModal(false);
+        }
+      };
+    </script>
+  </body>
+</html>
